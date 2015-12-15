@@ -14,7 +14,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
         health = startingHealth;//sets health
     }
 
-    public void TakeHit(float damage, RaycastHit hit)
+    public void TakeHit(float damage, RaycastHit hit)//when hit take damg and possebly die
     {
         health -= damage;
 
@@ -24,7 +24,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
         }
     }
 
-    protected void Die()
+    protected void Die()//when would this be used >_>
     {
         dead = true;
         if (OnDeath != null)
