@@ -6,15 +6,23 @@ public class SpawnSystem : MonoBehaviour {
     private Wave[] _waves;//ammount of waves
     [SerializeField]
     private Enemy _enemy;//import enemy class
+    [SerializeField]
+    private float _maxTimeBetweenWaves;//the max ammount of time you get between waves
+
 
     private Wave _currentWave;//has the info from current wave
-    private int _currentWaveNum;//which number the current wave is
 
-    private int _enemiesToSpawn;//how much are yet to spawn, if 0 then no enemies wil be spawned for this wave
-    private int _enemiesAlive;//the ammount of enemies that are still alive(includes enemies yet to be spawned)
     private float _nextSpawnTime;//for checking if if it is time for the next enemy to spawn
 
-    void Start()
+    private bool _waveDone;//checks if wave is done
+
+    private int _currentWaveNum;//which number the current wave is
+    private int _enemiesToSpawn;//how much are yet to spawn, if 0 then no enemies wil be spawned for this wave
+    private int _enemiesAlive;//the ammount of enemies that are still alive(includes enemies yet to be spawned)
+    public int _percentHP;//percentage hp wat er bij komt
+    private int _percentSpeed;//percentage movementspeed wat er bij komt
+
+    void Awake()
     {
         NextWave();
     }
@@ -34,6 +42,16 @@ public class SpawnSystem : MonoBehaviour {
             Enemy spawnedEnemy = Instantiate(_enemy, Vector3.zero, Quaternion.identity) as Enemy;
             spawnedEnemy.OnDeath += OnEnemyDeath;//when ondeath is called, onenemydeath wil be called to
         }
+        if (_waveDone == true)
+        {
+            _maxTimeBetweenWaves -= Time.deltaTime;
+            Debug.Log(Mathf.Round(_maxTimeBetweenWaves));
+            if (_maxTimeBetweenWaves <= 0)
+            {
+                NextWave();
+                _waveDone = false;
+            }
+        }
     }
 
     void OnEnemyDeath()//decreases the int enemies alive and checks if next wave can start
@@ -42,11 +60,11 @@ public class SpawnSystem : MonoBehaviour {
         _enemiesAlive--;
         if(_enemiesAlive == 0)
         {
-            NextWave();
+            _waveDone = true;
         }
     }
 
-    void NextWave()//ads 1 to the wave number and sets the currentwave to a new wave and sets the ammount of enemies to spawn to the amouhnt given by the new wave  
+    void NextWave()//ads 1 to the wave number and sets the currentwave to a new wave and sets the value's given by the new wave  
     {
         _currentWaveNum++;
         if (_currentWaveNum - 1 < _waves.Length)
@@ -55,6 +73,9 @@ public class SpawnSystem : MonoBehaviour {
 
             _enemiesToSpawn = _currentWave.enemyCount;
             _enemiesAlive = _enemiesToSpawn;
+            _percentHP = _currentWave.addedPercentageHealth;
+            _percentSpeed = _currentWave.addedPercentageMovespeed; 
+            
         }
     }
     [System.Serializable]
@@ -62,5 +83,8 @@ public class SpawnSystem : MonoBehaviour {
     {
         public int enemyCount;//how much enemies in the wave
         public float spawnTime;//how much time inbetween enemy spawns
+        public int addedPercentageHealth;//each ennemy has a static(not yet static this version) base health that wont be changed, to make each wave harder the health that the enemy starts with is baseHealth + (basehealth/100 * addedPercentageHealth). 
+        public int addedPercentageMovespeed;//each ennemy has a static(not yet static this version) base movespeed that wont be changed, to make each wave harder the speed that the enemy starts with is baseHealth + (basespeed/100 * addedPercentageMovespeed).
+        //why percentage? if i add +2 hp each round it makes later on the difrense between tanks and other units insignificant, round 1 tank 10hp speedster 3hp, round 15 tank 40hp speedster 33hp now we have a tanky speedster wich is op or a weak tank. percentage fixes that and same goes for th speed.
     }
 }

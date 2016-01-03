@@ -7,19 +7,34 @@ public class Projectile : MonoBehaviour {
     private LayerMask _collisionMask;//layer wich the projectile checks for
 
     [SerializeField]
+    private float _maxRange = 100;//the max range the bullet will go
+    private float _rangeTraveled;//how much the bullet has gone
+    [SerializeField]
     private float _projectileSpeed = 10;//the speed of the projectile >_>
     [SerializeField]
-    private float _damage = 1;
+    private float _damage = 1;//the ammount of damg this thing does
 
     public void SetSpeed(float newSpeed)//here otherclasses can change the speed of the projectile(incase of more guns or something like that)
     {
         _projectileSpeed = newSpeed;
     }
 
+    void Start()
+    {
+        _rangeTraveled = 0;
+    }
 	void Update () {
         float moveDistance = _projectileSpeed * Time.deltaTime;//this calculates the distance it moves before actualy moving
-        CheckCollisions(moveDistance);
-        transform.Translate(Vector3.forward * moveDistance);//this moves the projectile forward
+        if (_maxRange > _rangeTraveled)//is the max range still bigger than range traveled?
+        {
+            CheckCollisions(moveDistance);
+            transform.Translate(Vector3.forward * moveDistance);//this moves the projectile forward
+            _rangeTraveled += moveDistance;//
+        }
+        else
+        {
+            GameObject.Destroy(gameObject);//destroy this object(the projectile)
+        }
 	}
 
     void CheckCollisions(float moveDistance)//checks if the projectile hits something before hitting it
