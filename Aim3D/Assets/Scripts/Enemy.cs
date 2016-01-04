@@ -13,6 +13,7 @@ public class Enemy : LivingEntity//imports the living entity script
     [SerializeField]
     private float _baseHp;//the base hp of this enemy
 
+
     private GameObject _findSpawner;//finds spawner object
 
     private SpawnSystem _waveStats;//imports spawnsystem
@@ -25,7 +26,8 @@ public class Enemy : LivingEntity//imports the living entity script
     protected override void Start()
     {
         base.Start();//gets the start from living entity
-        startingHealth = _baseHp + _baseHp / 100 * _waveStats._percentHP; 
+        startingHealth = _baseHp + _baseHp / 100 * _waveStats._percentHP;
+        health = _baseHp + _baseHp / 100 * _waveStats._percentHP;
         Debug.Log(startingHealth + " " + _baseHp + " " + _waveStats._percentHP);
 
         player = GameObject.FindGameObjectWithTag("Player").transform;//player is the thing with the tag player(what a suprise)

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class SpawnSystem : MonoBehaviour {
     [SerializeField]
@@ -8,6 +9,7 @@ public class SpawnSystem : MonoBehaviour {
     private Enemy _enemy;//import enemy class
     [SerializeField]
     private float _maxTimeBetweenWaves;//the max ammount of time you get between waves
+    private float _maxTimeCounter;//actual vallue that counts down to 0
 
 
     private Wave _currentWave;//has the info from current wave
@@ -22,14 +24,28 @@ public class SpawnSystem : MonoBehaviour {
     public int _percentHP;//percentage hp wat er bij komt
     private int _percentSpeed;//percentage movementspeed wat er bij komt
 
+    private GameObject _timerText;//find timer object
+    private Vector3 _textPos;
+
     void Awake()
     {
         NextWave();
+        _timerText = GameObject.Find("TimeText");
     }
 
     void Update()
     {
         spawnCheck();
+        _timerText.GetComponent<Text>().text = "Time until next wave: " + (Mathf.Round(_maxTimeCounter)-1);
+        
+        if (Mathf.Round(_maxTimeCounter) <= 0)
+        {
+            _timerText.SetActive(false);
+        }
+        else
+        {
+            _timerText.SetActive(true);
+        }
     }
 
     void spawnCheck()
@@ -44,9 +60,9 @@ public class SpawnSystem : MonoBehaviour {
         }
         if (_waveDone == true)
         {
-            _maxTimeBetweenWaves -= Time.deltaTime;
-            Debug.Log(Mathf.Round(_maxTimeBetweenWaves));
-            if (_maxTimeBetweenWaves <= 0)
+            _maxTimeCounter -= Time.deltaTime;
+            Debug.Log(Mathf.Round(_maxTimeCounter));
+            if (_maxTimeCounter <= 0)
             {
                 NextWave();
                 _waveDone = false;
@@ -61,6 +77,7 @@ public class SpawnSystem : MonoBehaviour {
         if(_enemiesAlive == 0)
         {
             _waveDone = true;
+            _maxTimeCounter = _maxTimeBetweenWaves;
         }
     }
 
