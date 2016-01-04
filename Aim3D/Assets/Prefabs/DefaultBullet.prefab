@@ -12,8 +12,9 @@ GameObject:
   - 65: {fileID: 6506342}
   - 23: {fileID: 2307594}
   - 114: {fileID: 11499302}
+  - 122: {fileID: 12290516}
   m_Layer: 0
-  m_Name: Bullet
+  m_Name: DefaultBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,8 +27,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 197250}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .270000011, y: 0, z: -5.19999981}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 1.02699995, y: 0, z: -5.19999981}
+  m_LocalScale: {x: .150000006, y: .150000006, z: .25}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -90,9 +91,20 @@ MonoBehaviour:
   _collisionMask:
     serializedVersion: 2
     m_Bits: 4294966783
-  _maxRange: 50
-  _projectileSpeed: 10
+  _maxRange: 70
+  _projectileSpeed: 50
   _damage: 4
+--- !u!122 &12290516
+Halo:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 197250}
+  m_Enabled: 1
+  m_Color:
+    serializedVersion: 2
+    rgba: 4278552558
+  m_Size: .200000003
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

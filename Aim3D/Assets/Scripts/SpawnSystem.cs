@@ -6,12 +6,20 @@ public class SpawnSystem : MonoBehaviour {
     [SerializeField]
     private Wave[] _waves;//ammount of waves
     [SerializeField]
-    private Enemy _enemy;//import enemy class
+    private EnemyKind[] _enemies;//import enemy class
+
+    private Enemy _enemy;//the enemy that gets spawned
+
     [SerializeField]
     private float _maxTimeBetweenWaves;//the max ammount of time you get between waves
     private float _maxTimeCounter;//actual vallue that counts down to 0
-
-
+    [SerializeField]
+    private bool _112233;//volgorde soort ennemies, eerst een dan ander
+    [SerializeField]
+    private bool _123123;//volgorde soort ennemies, om de beurd
+    [SerializeField]
+    private bool _232113;////volgorde soort ennemies random
+    private EnemyKind _currentEnemy;//has the difrend kinds of enemies
     private Wave _currentWave;//has the info from current wave
 
     private float _nextSpawnTime;//for checking if if it is time for the next enemy to spawn
@@ -20,24 +28,29 @@ public class SpawnSystem : MonoBehaviour {
 
     private int _currentWaveNum;//which number the current wave is
     private int _enemiesToSpawn;//how much are yet to spawn, if 0 then no enemies wil be spawned for this wave
-    private int _enemiesAlive;//the ammount of enemies that are still alive(includes enemies yet to be spawned)
+    private int _enemiesAlive;//the ammount of enemies that are still alive(includes enemies yet to be spawned
+    [HideInInspector]
     public int _percentHP;//percentage hp wat er bij komt
     private int _percentSpeed;//percentage movementspeed wat er bij komt
 
-    private GameObject _timerText;//find timer object
-    private Vector3 _textPos;
+    private GameObject _timerText;//timer object
 
     void Awake()
     {
         NextWave();
-        _timerText = GameObject.Find("TimeText");
+        _timerText = GameObject.Find("TimeText");//find timer object
     }
 
     void Update()
     {
         spawnCheck();
-        _timerText.GetComponent<Text>().text = "Time until next wave: " + (Mathf.Round(_maxTimeCounter)-1);
-        
+        timerCheck();
+    }
+
+    void timerCheck()
+    {
+        _timerText.GetComponent<Text>().text = "Time until next wave: " + (Mathf.Round(_maxTimeCounter) - 1);
+
         if (Mathf.Round(_maxTimeCounter) <= 0)
         {
             _timerText.SetActive(false);
@@ -47,7 +60,6 @@ public class SpawnSystem : MonoBehaviour {
             _timerText.SetActive(true);
         }
     }
-
     void spawnCheck()
     {
         if (_enemiesToSpawn > 0 && Time.time > _nextSpawnTime)//checks if there are enemies left to spawn this wave and if it is time to spawn a enemy, if it executes it ajusts the amount of enemies that need to spawn, resets the timer and spawns a enemy
@@ -55,6 +67,42 @@ public class SpawnSystem : MonoBehaviour {
             _enemiesToSpawn--;
             _nextSpawnTime = Time.time + _currentWave.spawnTime;
 
+            if(_112233)//functie die er voor zorgt dat als 112233 true is dat de eerste eerst worden gespawned dan de 2e en dan de 3e
+            {
+                if(_currentWave.enemyCount1 != 0)
+                {
+                    _currentEnemy = _enemies[0];
+                    _enemy = _currentEnemy.enemy;
+                    _currentWave.enemyCount1--;
+                }
+                else if (_currentWave.enemyCount2 != 0)
+                {
+                    _currentEnemy = _enemies[1];
+                    _enemy = _currentEnemy.enemy;
+                    _currentWave.enemyCount2--;
+                }
+                else if (_currentWave.enemyCount3 != 0)
+                {
+                    _currentEnemy = _enemies[2];
+                    _enemy = _currentEnemy.enemy;
+                    _currentWave.enemyCount3--;
+                }
+                else if (_currentWave.enemyCount4 != 0)
+                {
+                    _currentEnemy = _enemies[3];
+                    _enemy = _currentEnemy.enemy;
+                    _currentWave.enemyCount4--;
+                }
+            }
+            if(_123123)//wip
+            {
+
+
+            }
+            if(_232113)//wip
+            {
+
+            }
             Enemy spawnedEnemy = Instantiate(_enemy, Vector3.zero, Quaternion.identity) as Enemy;
             spawnedEnemy.OnDeath += OnEnemyDeath;//when ondeath is called, onenemydeath wil be called to
         }
@@ -87,18 +135,29 @@ public class SpawnSystem : MonoBehaviour {
         if (_currentWaveNum - 1 < _waves.Length)
         {
             _currentWave = _waves[_currentWaveNum - 1];
-
-            _enemiesToSpawn = _currentWave.enemyCount;
+            _currentWave.enemyCountTotal = _currentWave.enemyCount1 + _currentWave.enemyCount2 + _currentWave.enemyCount3 + _currentWave.enemyCount4 ;
+            _enemiesToSpawn = _currentWave.enemyCountTotal;
             _enemiesAlive = _enemiesToSpawn;
             _percentHP = _currentWave.addedPercentageHealth;
             _percentSpeed = _currentWave.addedPercentageMovespeed; 
             
         }
     }
+
+    [System.Serializable]
+    public class EnemyKind
+    {
+        public Enemy enemy;
+    }
+
     [System.Serializable]
     public class Wave//class for edditing the waves
     {
-        public int enemyCount;//how much enemies in the wave
+        public int enemyCount1;//how much nr 1 enemies
+        public int enemyCount2;//how much nr 2 enemies
+        public int enemyCount3;//how much nr 3 enemies
+        public int enemyCount4;//how much nr 4 enemies
+        public int enemyCountTotal;//how much enemies in the wave total
         public float spawnTime;//how much time inbetween enemy spawns
         public int addedPercentageHealth;//each ennemy has a static(not yet static this version) base health that wont be changed, to make each wave harder the health that the enemy starts with is baseHealth + (basehealth/100 * addedPercentageHealth). 
         public int addedPercentageMovespeed;//each ennemy has a static(not yet static this version) base movespeed that wont be changed, to make each wave harder the speed that the enemy starts with is baseHealth + (basespeed/100 * addedPercentageMovespeed).
