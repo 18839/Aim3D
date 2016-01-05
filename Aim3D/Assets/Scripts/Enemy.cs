@@ -12,7 +12,10 @@ public class Enemy : LivingEntity//imports the living entity script
     private float _nextAttack;//how much time til it can attack again
     [SerializeField]
     private float _baseHp;//the base hp of this enemy
+    [SerializeField]
+    private LayerMask _unwalkableMask;//unwalkable layer
 
+    private bool _nearPlayer;//is the enemy near the player
 
     private GameObject _findSpawner;//finds spawner object
 
@@ -35,15 +38,28 @@ public class Enemy : LivingEntity//imports the living entity script
 
     // Update is called once per frame
     void Update () {
-        if (Time.time > _nextAttack)//is it time to attack?
+        //bool walkable = !(Physics.CheckSphere(transform.position, 2, _unwalkableMask));//checks if it is walkable or not
+        bool ableToWalkToPlaye = !(Physics.CheckSphere(player.position, 1, _unwalkableMask));//checks if player is in a walkable space
+        //Debug.Log(walkable);
+        float sqrDistance = (player.position - transform.position).sqrMagnitude;
+        if (sqrDistance < Mathf.Pow(7, 2) && ableToWalkToPlaye && !_nearPlayer)
         {
-            float sqrDistance = (player.position - transform.position).sqrMagnitude;
-            if (sqrDistance < Mathf.Pow(_attackRange, 2))
+            Debug.Log("follow");
+            float step = 5 * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, player.position, step);
+        }
+        if (sqrDistance < Mathf.Pow(_attackRange, 2))
+        {
+            _nearPlayer = true;
+            if (Time.time > _nextAttack)//is it time to attack?
+
             {
                 _nextAttack = Time.time + _attackspeed;
                 print("pow");
             }
         }
-	}
+        else
+            _nearPlayer = false;
+    }
     //IEnumerator attack
 }

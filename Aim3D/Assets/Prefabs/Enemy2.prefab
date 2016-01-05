@@ -141,6 +141,9 @@ MonoBehaviour:
   _attackRange: 1.5
   _attackspeed: 1
   _baseHp: 2
+  _unwalkableMask:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!136 &13632050
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -188,7 +191,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: _unwalkableMask.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 190202}
