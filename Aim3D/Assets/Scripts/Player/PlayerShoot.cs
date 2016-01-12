@@ -6,12 +6,14 @@ public class PlayerShoot : MonoBehaviour
 
     [SerializeField]
     private GameObject _bulletToShoot;
-
+    
     private bool _shooting = false;
 
 
     void Update()
     {
+
+        
 
         if (Input.GetButtonDown("Fire1"))
         {

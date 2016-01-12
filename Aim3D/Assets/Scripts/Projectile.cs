@@ -14,6 +14,14 @@ public class Projectile : MonoBehaviour {
     [SerializeField]
     private float _damage = 1;//the ammount of damg this thing does
 
+    //Vector3
+    private Vector3 _myRotation;
+    //Vector3
+
+    //GameObject
+    private GameObject _getPlayerRotation;
+    //GameObject
+
     public void SetSpeed(float newSpeed)//here otherclasses can change the speed of the projectile(incase of more guns or something like that)
     {
         _projectileSpeed = newSpeed;
@@ -22,13 +30,15 @@ public class Projectile : MonoBehaviour {
     void Start()
     {
         _rangeTraveled = 0;
+        _getPlayerRotation = GameObject.FindGameObjectWithTag("Player");
+        _myRotation = _getPlayerRotation.transform.TransformDirection(Vector3.forward);
     }
 	void Update () {
         float moveDistance = _projectileSpeed * Time.deltaTime;//this calculates the distance it moves before actualy moving
         if (_maxRange > _rangeTraveled)//is the max range still bigger than range traveled?
         {
             CheckCollisions(moveDistance);
-            transform.Translate(Vector3.forward * moveDistance);//this moves the projectile forward
+            transform.Translate(_myRotation * moveDistance);//this moves the projectile forward
             _rangeTraveled += moveDistance;//
         }
         else
@@ -54,7 +64,6 @@ public class Projectile : MonoBehaviour {
         {
             damageableObject.TakeHit(_damage, hit);//damage it
         }
-        Debug.Log(hit.collider.gameObject.name);
         GameObject.Destroy(gameObject);//destroy this object(the projectile)
     }
 }
