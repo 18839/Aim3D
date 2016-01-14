@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerMovement : MonoBehaviour
 {
     //Floats
+    [SerializeField]
     private float _speed = 6.0F;
     private float _jumpSpeed = 8.0F;
     private float _gravity = 20.0F;

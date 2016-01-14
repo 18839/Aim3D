@@ -23,21 +23,24 @@ public class LivingEntity : MonoBehaviour, IDamageable
 
         if (health <= 0 && !dead)
         {
-            Die();
+            death();
+        }
+    }
+    public void PlayerDamg(float damage)
+    {
+        health -= damage;
+        if (health <= 0 && !dead)
+        {
+            Debug.Log("killed by minnion");
         }
     }
 
-    protected void Die()//when would this be used >_>
+    protected void death()//when would this be used >_>
     {
         dead = true;
         if (OnDeath != null)
             OnDeath();
-        {
-
-        }
-
         Instantiate(_healthPickup, gameObject.transform.position, Quaternion.identity);
         GameObject.Destroy(gameObject);
-        
     }
 }

@@ -1,24 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HealPickUp : MonoBehaviour {
+public class HealPickUp : MonoBehaviour
+{
 
-    [SerializeField]
-    private float _damage = -1;//the ammount of damg this thing does
-
-	void Update () 
+    private float _addedHp = -1;//the ammount of health added(its in minus becouse it uses the damg system but reversed... programming is just like magic)
+    void OnTriggerEnter(Collider other)
     {
-      
-	}
-
-    private void OnTriggerEnter(RaycastHit hit)
-    {
-        IDamageable damageableObject = hit.collider.GetComponent<IDamageable>();//check for component idamagable on the hit object
-        if (damageableObject != null)//"if object has idamagable"
+        if (tag == "Player")
         {
-            damageableObject.TakeHit(_damage, hit);//damage it
+            IDamageable damageableObject = other.GetComponent<IDamageable>();//check for component idamagable on the hit object
+            if (damageableObject != null)//"if object has idamagable"
+            {
+                damageableObject.PlayerDamg(_addedHp);//heal it(add negative damg)
+            }
+            Debug.Log(other.gameObject.name);
+            GameObject.Destroy(gameObject);//destroy this object(the projectile)
         }
-        Debug.Log(hit.collider.gameObject.name);
-        GameObject.Destroy(gameObject);//destroy this object(the projectile)
     }
 }
